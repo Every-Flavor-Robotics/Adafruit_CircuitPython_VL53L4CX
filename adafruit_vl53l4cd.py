@@ -25,14 +25,12 @@ Implementation Notes
 * Adafruit's Bus Device library: https://github.com/adafruit/Adafruit_CircuitPython_BusDevice
 """
 
-# modified for VL53L4CX
-
 import time
 import struct
 from adafruit_bus_device import i2c_device
 from micropython import const
 
-__version__ = "1.1.4" 
+__version__ = "0.0.0+auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_VL53L4CD.git"
 
 _VL53L4CD_SOFT_RESET = const(0x0000)
@@ -77,7 +75,7 @@ class VL53L4CD:
         self.i2c_device = i2c_device.I2CDevice(i2c, address)
         model_id, module_type = self.model_info
         if model_id != 0xEB or module_type != 0xAA:
-            raise RuntimeError("Wrong sensor ID ({ID}) or type ({type})!".format(ID=model_id, type=module_type))
+            raise RuntimeError("Wrong sensor ID or type!")
         self._ranging = False
         self._sensor_init()
 
@@ -85,14 +83,14 @@ class VL53L4CD:
         # pylint: disable=line-too-long
         init_seq = (
             # value    addr : description
-            b"\x00"  # 0x2d : set bit 2 and 5 to 1 for fast plus mode (1MHz I2C), else don't touch # CX: was 0x12 -> 1 Mhz I2C, now 0 -> 400 kHz
+            b"\x12"  # 0x2d : set bit 2 and 5 to 1 for fast plus mode (1MHz I2C), else don't touch
             b"\x00"  # 0x2e : bit 0 if I2C pulled up at 1.8V, else set bit 0 to 1 (pull up at AVDD)
             b"\x00"  # 0x2f : bit 0 if GPIO pulled up at 1.8V, else set bit 0 to 1 (pull up at AVDD)
             b"\x11"  # 0x30 : set bit 4 to 0 for active high interrupt and 1 for active low (bits 3:0 must be 0x1)
             b"\x02"  # 0x31 : bit 1 = interrupt depending on the polarity
             b"\x00"  # 0x32 : not user-modifiable
             b"\x02"  # 0x33 : not user-modifiable
-            b"\x08"  # 0x34 : VL53L4CX_ANA_CONFIG__VCSEL_PULSE_WIDTH_OFFSET 
+            b"\x08"  # 0x34 : not user-modifiable
             b"\x00"  # 0x35 : not user-modifiable
             b"\x08"  # 0x36 : not user-modifiable
             b"\x10"  # 0x37 : not user-modifiable
@@ -111,11 +109,11 @@ class VL53L4CD:
             b"\x00"  # 0x44 : not user-modifiable
             b"\x00"  # 0x45 : not user-modifiable
             b"\x20"  # 0x46 : interrupt configuration 0->level low detection, 1-> level high, 2-> Out of window, 3->In window, 0x20-> New sample ready , TBC
-            b"\x09"  # 0x47 : VL53L4CX_CAL_CONFIG__VCSEL_START
+            b"\x0B"  # 0x47 : not user-modifiable
             b"\x00"  # 0x48 : not user-modifiable
             b"\x00"  # 0x49 : not user-modifiable
-            b"\x02"  # 0x4a : VL53L4CX_GLOBAL_CONFIG__VCSEL_WIDTH 
-            b"\xF5"  # 0x4b : VL53L4CX_PHASECAL_CONFIG__TIMEOUT_MACROP
+            b"\x02"  # 0x4a : not user-modifiable
+            b"\x14"  # 0x4b : not user-modifiable
             b"\x21"  # 0x4c : not user-modifiable
             b"\x00"  # 0x4d : not user-modifiable
             b"\x00"  # 0x4e : not user-modifiable
@@ -124,28 +122,28 @@ class VL53L4CD:
             b"\x00"  # 0x51 : not user-modifiable
             b"\x00"  # 0x52 : not user-modifiable
             b"\x00"  # 0x53 : not user-modifiable
-            b"\x8C"  # 0x54 : VL53L4CX_DSS_CONFIG__MANUAL_EFFECTIVE_SPADS_SELECT_HI  
-            b"\x00"  # 0x55 : VL53L4CX_DSS_CONFIG__MANUAL_EFFECTIVE_SPADS_SELECT_LO
-            b"\x00"  # 0x56 : VL53L4CX_DSS_CONFIG__MANUAL_BLOCK_SELECT 
-            b"\x38"  # 0x57 : VL53L4CX_DSS_CONFIG__APERTURE_ATTENUATION
-            b"\xFF"  # 0x58 : VL53L4CX_DSS_CONFIG__MAX_SPADS_LIMIT 
-            b"\x01"  # 0x59 : VL53L4CX_DSS_CONFIG__MIN_SPADS_LIMIT 
-            b"\x00"  # 0x5a : VL53L4CX_MM_CONFIG__TIMEOUT_MACROP_A_HI
-            b"\x1A"  # 0x5b : VL53L4CX_MM_CONFIG__TIMEOUT_MACROP_A_LO
-            b"\x00"  # 0x5c : VL53L4CX_MM_CONFIG__TIMEOUT_MACROP_B_HI
-            b"\x20"  # 0x5d : VL53L4CX_MM_CONFIG__TIMEOUT_MACROP_B_LO
-            b"\x01"  # 0x5e : VL53L4CX_RANGE_CONFIG__TIMEOUT_MACROP_A_HI
-            b"\xCC"  # 0x5f : VL53L4CX_RANGE_CONFIG__TIMEOUT_MACROP_A_LO 
-            b"\x0B"  # 0x60 : VL53L4CX_RANGE_CONFIG__VCSEL_PERIOD_A 
-            b"\x01"  # 0x61 : VL53L4CX_RANGE_CONFIG__TIMEOUT_MACROP_B_HI 
-            b"\xF5"  # 0x62 : VL53L4CX_RANGE_CONFIG__TIMEOUT_MACROP_B_LO
-            b"\x09"  # 0x63 : VL53L4CX_RANGE_CONFIG__VCSEL_PERIOD_B
+            b"\xC8"  # 0x54 : not user-modifiable
+            b"\x00"  # 0x55 : not user-modifiable
+            b"\x00"  # 0x56 : not user-modifiable
+            b"\x38"  # 0x57 : not user-modifiable
+            b"\xFF"  # 0x58 : not user-modifiable
+            b"\x01"  # 0x59 : not user-modifiable
+            b"\x00"  # 0x5a : not user-modifiable
+            b"\x08"  # 0x5b : not user-modifiable
+            b"\x00"  # 0x5c : not user-modifiable
+            b"\x00"  # 0x5d : not user-modifiable
+            b"\x01"  # 0x5e : not user-modifiable
+            b"\xCC"  # 0x5f : not user-modifiable
+            b"\x07"  # 0x60 : not user-modifiable
+            b"\x01"  # 0x61 : not user-modifiable
+            b"\xF1"  # 0x62 : not user-modifiable
+            b"\x05"  # 0x63 : not user-modifiable
             b"\x00"  # 0x64 : Sigma threshold MSB (mm in 14.2 format for MSB+LSB), default value 90 mm
             b"\xA0"  # 0x65 : Sigma threshold LSB
-            b"\x05"  # 0x66 : Min count Rate MSB (MCPS in 9.7 format for MSB+LSB)
-            b"\x00"  # 0x67 : Min count Rate LSB
-            b"\x08"  # 0x68 : VL53L4CX_RANGE_CONFIG__VALID_PHASE_LOW 
-            b"\x88"  # 0x69 : VL53L4CX_RANGE_CONFIG__VALID_PHASE_HIGH
+            b"\x00"  # 0x66 : Min count Rate MSB (MCPS in 9.7 format for MSB+LSB)
+            b"\x80"  # 0x67 : Min count Rate LSB
+            b"\x08"  # 0x68 : not user-modifiable
+            b"\x38"  # 0x69 : not user-modifiable
             b"\x00"  # 0x6a : not user-modifiable
             b"\x00"  # 0x6b : not user-modifiable
             b"\x00"  # 0x6c : Intermeasurement period MSB, 32 bits register
@@ -160,8 +158,8 @@ class VL53L4CD:
             b"\x00"  # 0x75 : distance threshold low LSB
             b"\x00"  # 0x76 : not user-modifiable
             b"\x01"  # 0x77 : not user-modifiable
-            b"\x0B"  # 0x78 : VL53L4CX_SD_CONFIG__WOI_SD0 
-            b"\x09"  # 0x79 : VL53L4CX_SD_CONFIG__WOI_SD1 
+            b"\x07"  # 0x78 : not user-modifiable
+            b"\x05"  # 0x79 : not user-modifiable
             b"\x06"  # 0x7a : not user-modifiable
             b"\x06"  # 0x7b : not user-modifiable
             b"\x00"  # 0x7c : not user-modifiable
@@ -184,8 +182,8 @@ class VL53L4CD:
         self.stop_ranging()
         self._write_register(_VL53L4CD_VHV_CONFIG_TIMEOUT_MACROP_LOOP_BOUND, b"\x09")
         self._write_register(0x0B, b"\x00")
-        self._write_register(0x0024, b"\x0A\x00") #VL53L4CX_DSS_CONFIG__TARGET_TOTAL_RATE_MCPS
-        self.inter_measurement = 50
+        self._write_register(0x0024, b"\x05\x00")
+        self.inter_measurement = 0
         self.timing_budget = 50
 
     @property
@@ -236,8 +234,8 @@ class VL53L4CD:
         if self._ranging:
             raise RuntimeError("Must stop ranging first.")
 
-        if not 8 <= val <= 200:
-            raise ValueError("Timing budget range duration must be 10ms to 200ms. ({})".format(val))
+        if not 10 <= val <= 200:
+            raise ValueError("Timing budget range duration must be 10ms to 200ms.")
 
         inter_meas = self.inter_measurement
         if inter_meas != 0 and val > inter_meas:
@@ -330,11 +328,11 @@ class VL53L4CD:
             self._write_register(_VL53L4CD_SYSTEM_START, b"\x21")
         else:
             # autonomous mode
-            self._write_register(_VL53L4CD_SYSTEM_START, b"\x46")
+            self._write_register(_VL53L4CD_SYSTEM_START, b"\x40")
 
         # wait for data ready
         timed_out = True
-        for _ in range(2000):
+        for _ in range(1000):
             if self.data_ready:
                 timed_out = False
                 break
