@@ -14,7 +14,7 @@ The typical current consumption during active range readings is about 19 mA per 
 import time
 import board
 import digitalio
-import adafruit_vl53l4cd
+import adafruit_vl53l4cx
 
 # Define the I2C pins.
 i2c = board.I2C()  # uses board.SCL and board.SDA
@@ -44,7 +44,7 @@ for pin_number, shutdown_pin in enumerate(xshut):
     shutdown_pin.value = True
     # Instantiate the VL53L4CD I2C object and insert it into the VL53L4CD list.
     # This also performs VL53L4CD hardware check.
-    sensor_i2c = adafruit_vl53l4cd.VL53L4CD(i2c)
+    sensor_i2c = adafruit_vl53l4cx.VL53L4CD(i2c)
     vl53l4cd_list.append(sensor_i2c)
     # This ensures no address change on one sensor board, specifically the last one in the series.
     if pin_number < len(xshut) - 1:

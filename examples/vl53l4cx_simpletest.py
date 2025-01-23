@@ -11,18 +11,18 @@
 # Will print the sensed range/distance every second.
 
 import board
-import adafruit_vl53l4cd
+import adafruit_vl53l4cx
 
 i2c = board.I2C()  # uses board.SCL and board.SDA
 # i2c = board.STEMMA_I2C()  # For using the built-in STEMMA QT connector on a microcontroller
 
-vl53 = adafruit_vl53l4cd.VL53L4CD(i2c)
+vl53 = adafruit_vl53l4cx.VL53L4CX(i2c)
 
 # OPTIONAL: can set non-default values
 vl53.inter_measurement = 0
 vl53.timing_budget = 200
 
-print("VL53L4CD Simple Test.")
+print("VL53L4CX Simple Test.")
 print("--------------------")
 model_id, module_type = vl53.model_info
 print("Model ID: 0x{:0X}".format(model_id))

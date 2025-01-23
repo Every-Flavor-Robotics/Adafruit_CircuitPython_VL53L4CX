@@ -3,10 +3,10 @@
 #
 # SPDX-License-Identifier: MIT
 """
-`adafruit_vl53l4cd`
+`adafruit_vl53l4cx`
 ================================================================================
 
-CircuitPython helper library for the VL53L4CD time of flight distance sensor.
+CircuitPython helper library for the VL53L4CX time of flight distance sensor.
 
 
 * Author(s): Carter Nelson
@@ -16,7 +16,7 @@ Implementation Notes
 
 **Hardware:**
 
-* `Adafruit VL53L4CD Time of Flight Distance Sensor <https://www.adafruit.com/product/5396>`_
+* `Adafruit VL53L4CX Time of Flight Distance Sensor <https://www.adafruit.com/product/5425>`_
 
 **Software and Dependencies:**
 
@@ -31,9 +31,8 @@ import time
 import struct
 from adafruit_bus_device import i2c_device
 from micropython import const
-
-__version__ = "1.1.4" 
-__repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_VL53L4CD.git"
+__version__ = "1.1.4"
+__repo__ = "https://github.com/Every-Flavor-Robotics/Adafruit_CircuitPython_VL53L4CX.git"
 
 _VL53L4CD_SOFT_RESET = const(0x0000)
 _VL53L4CD_I2C_SLAVE_DEVICE_ADDRESS = const(0x0001)
@@ -69,7 +68,7 @@ _VL53L4CD_FIRMWARE_SYSTEM_STATUS = const(0x00E5)
 _VL53L4CD_IDENTIFICATION_MODEL_ID = const(0x010F)
 
 
-class VL53L4CD:
+class VL53L4CX:
     """Driver for the VL53L4CD distance sensor."""
 
     def __init__(self, i2c, address=41):
@@ -92,7 +91,7 @@ class VL53L4CD:
             b"\x02"  # 0x31 : bit 1 = interrupt depending on the polarity
             b"\x00"  # 0x32 : not user-modifiable
             b"\x02"  # 0x33 : not user-modifiable
-            b"\x08"  # 0x34 : VL53L4CX_ANA_CONFIG__VCSEL_PULSE_WIDTH_OFFSET 
+            b"\x08"  # 0x34 : VL53L4CX_ANA_CONFIG__VCSEL_PULSE_WIDTH_OFFSET
             b"\x00"  # 0x35 : not user-modifiable
             b"\x08"  # 0x36 : not user-modifiable
             b"\x10"  # 0x37 : not user-modifiable
@@ -114,7 +113,7 @@ class VL53L4CD:
             b"\x09"  # 0x47 : VL53L4CX_CAL_CONFIG__VCSEL_START
             b"\x00"  # 0x48 : not user-modifiable
             b"\x00"  # 0x49 : not user-modifiable
-            b"\x02"  # 0x4a : VL53L4CX_GLOBAL_CONFIG__VCSEL_WIDTH 
+            b"\x02"  # 0x4a : VL53L4CX_GLOBAL_CONFIG__VCSEL_WIDTH
             b"\xF5"  # 0x4b : VL53L4CX_PHASECAL_CONFIG__TIMEOUT_MACROP
             b"\x21"  # 0x4c : not user-modifiable
             b"\x00"  # 0x4d : not user-modifiable
@@ -124,27 +123,27 @@ class VL53L4CD:
             b"\x00"  # 0x51 : not user-modifiable
             b"\x00"  # 0x52 : not user-modifiable
             b"\x00"  # 0x53 : not user-modifiable
-            b"\x8C"  # 0x54 : VL53L4CX_DSS_CONFIG__MANUAL_EFFECTIVE_SPADS_SELECT_HI  
+            b"\x8C"  # 0x54 : VL53L4CX_DSS_CONFIG__MANUAL_EFFECTIVE_SPADS_SELECT_HI
             b"\x00"  # 0x55 : VL53L4CX_DSS_CONFIG__MANUAL_EFFECTIVE_SPADS_SELECT_LO
-            b"\x00"  # 0x56 : VL53L4CX_DSS_CONFIG__MANUAL_BLOCK_SELECT 
+            b"\x00"  # 0x56 : VL53L4CX_DSS_CONFIG__MANUAL_BLOCK_SELECT
             b"\x38"  # 0x57 : VL53L4CX_DSS_CONFIG__APERTURE_ATTENUATION
-            b"\xFF"  # 0x58 : VL53L4CX_DSS_CONFIG__MAX_SPADS_LIMIT 
-            b"\x01"  # 0x59 : VL53L4CX_DSS_CONFIG__MIN_SPADS_LIMIT 
+            b"\xFF"  # 0x58 : VL53L4CX_DSS_CONFIG__MAX_SPADS_LIMIT
+            b"\x01"  # 0x59 : VL53L4CX_DSS_CONFIG__MIN_SPADS_LIMIT
             b"\x00"  # 0x5a : VL53L4CX_MM_CONFIG__TIMEOUT_MACROP_A_HI
             b"\x1A"  # 0x5b : VL53L4CX_MM_CONFIG__TIMEOUT_MACROP_A_LO
             b"\x00"  # 0x5c : VL53L4CX_MM_CONFIG__TIMEOUT_MACROP_B_HI
             b"\x20"  # 0x5d : VL53L4CX_MM_CONFIG__TIMEOUT_MACROP_B_LO
             b"\x01"  # 0x5e : VL53L4CX_RANGE_CONFIG__TIMEOUT_MACROP_A_HI
-            b"\xCC"  # 0x5f : VL53L4CX_RANGE_CONFIG__TIMEOUT_MACROP_A_LO 
-            b"\x0B"  # 0x60 : VL53L4CX_RANGE_CONFIG__VCSEL_PERIOD_A 
-            b"\x01"  # 0x61 : VL53L4CX_RANGE_CONFIG__TIMEOUT_MACROP_B_HI 
+            b"\xCC"  # 0x5f : VL53L4CX_RANGE_CONFIG__TIMEOUT_MACROP_A_LO
+            b"\x0B"  # 0x60 : VL53L4CX_RANGE_CONFIG__VCSEL_PERIOD_A
+            b"\x01"  # 0x61 : VL53L4CX_RANGE_CONFIG__TIMEOUT_MACROP_B_HI
             b"\xF5"  # 0x62 : VL53L4CX_RANGE_CONFIG__TIMEOUT_MACROP_B_LO
             b"\x09"  # 0x63 : VL53L4CX_RANGE_CONFIG__VCSEL_PERIOD_B
             b"\x00"  # 0x64 : Sigma threshold MSB (mm in 14.2 format for MSB+LSB), default value 90 mm
             b"\xA0"  # 0x65 : Sigma threshold LSB
             b"\x05"  # 0x66 : Min count Rate MSB (MCPS in 9.7 format for MSB+LSB)
             b"\x00"  # 0x67 : Min count Rate LSB
-            b"\x08"  # 0x68 : VL53L4CX_RANGE_CONFIG__VALID_PHASE_LOW 
+            b"\x08"  # 0x68 : VL53L4CX_RANGE_CONFIG__VALID_PHASE_LOW
             b"\x88"  # 0x69 : VL53L4CX_RANGE_CONFIG__VALID_PHASE_HIGH
             b"\x00"  # 0x6a : not user-modifiable
             b"\x00"  # 0x6b : not user-modifiable
@@ -160,8 +159,8 @@ class VL53L4CD:
             b"\x00"  # 0x75 : distance threshold low LSB
             b"\x00"  # 0x76 : not user-modifiable
             b"\x01"  # 0x77 : not user-modifiable
-            b"\x0B"  # 0x78 : VL53L4CX_SD_CONFIG__WOI_SD0 
-            b"\x09"  # 0x79 : VL53L4CX_SD_CONFIG__WOI_SD1 
+            b"\x0B"  # 0x78 : VL53L4CX_SD_CONFIG__WOI_SD0
+            b"\x09"  # 0x79 : VL53L4CX_SD_CONFIG__WOI_SD1
             b"\x06"  # 0x7a : not user-modifiable
             b"\x06"  # 0x7b : not user-modifiable
             b"\x00"  # 0x7c : not user-modifiable

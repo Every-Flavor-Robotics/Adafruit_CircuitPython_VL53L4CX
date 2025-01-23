@@ -8,22 +8,21 @@ requires = [
     "wheel",
     "setuptools-scm",
 ]
-
 [project]
-name = "adafruit-circuitpython-vl53l4cd"
-description = "CircuitPython helper library for the VL53L4CD time of flight distance sensor."
+name = "adafruit-circuitpython-vl53l4cx"
+description = "CircuitPython helper library for the VL53L4CX time of flight distance sensor."
 version = "0.0.0+auto.0"
 readme = "README.rst"
 authors = [
     {name = "Adafruit Industries", email = "circuitpython@adafruit.com"}
 ]
-urls = {Homepage = "https://github.com/adafruit/Adafruit_CircuitPython_VL53L4CD.git"}
+urls = {Homepage = "https://github.com/Every-Flavor-Robotics/Adafruit_CircuitPython_VL53L4CX.git"}
 keywords = [
     "adafruit",
     "blinka",
     "circuitpython",
     "micropython",
-    "vl53l4cd",
+    "vl53l4cx",
     "distance",
 ]
 license = {text = "MIT"}
@@ -38,7 +37,7 @@ classifiers = [
 dynamic = ["dependencies", "optional-dependencies"]
 
 [tool.setuptools]
-py-modules = ["adafruit_vl53l4cd"]
+py-modules = ["adafruit_vl53l4cx"]
 
 [tool.setuptools.dynamic]
 dependencies = {file = ["requirements.txt"]}
