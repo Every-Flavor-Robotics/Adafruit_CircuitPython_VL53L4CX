@@ -46,9 +46,9 @@ This is easily achieved by downloading
 or individual libraries can be installed usi
 `circup <https://github.com/adafruit/circup>`_.
 
-Adafruit VL53L4CD Time of Flight Distance Sensor - ~1 to 1300mm - STEMMA QT / Qwiic
+Adafruit VL53L4CX Time of Flight Distance Sensor - ~1 to 6000mm - STEMMA QT / Qwiic
 
-`Purchase one from the Adafruit shop <http://www.adafruit.com/products/5396>`_
+`Purchase one from the Adafruit shop <https://www.adafruit.com/product/5425>`_
 
 
 Installing from PyPI
@@ -63,4 +63,4 @@ To install, clone this repo and install with pip:
 Usage Example
 =============
 
-See examples/vl53l4cd_simpletest.py for basic usage example.
+See examples/vl53l4cx_simpletest.py for basic usage example.
