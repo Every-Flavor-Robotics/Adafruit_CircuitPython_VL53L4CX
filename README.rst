@@ -21,7 +21,9 @@ Introduction
     :target: https://github.com/psf/black
     :alt: Code Style: Black
 
-This is a Python driver for the VL53L4CX time of flight range sensor. It is based on [veloyage's fork](https://github.com/veloyage/Adafruit_CircuitPython_VL53L4CD) of the [Adafruit VL53L4CD driver](https://github.com/adafruit/Adafruit_CircuitPython_VL53L4CD). Adafruit has not released a Python driver for the VL53L4CX, so this fork is necessary to use the VL53L4CX with Python on a Raspberry Pi. veloyage's changes enable the driver to read the distances up to 250 cm, which is still not the full range of the sensor.
+This is a Python driver for the VL53L4CX time of flight range sensor, based on `veloyage's fork <https://github.com/veloyage/Adafruit_CircuitPython_VL53L4CD>`_ of the `Adafruit VL53L4CD driver <https://github.com/adafruit/Adafruit_CircuitPython_VL53L4CD>`_.
+
+Adafruit has not released a Python driver for the VL53L4CX, so this fork is necessary to use the VL53L4CX with Python on a Raspberry Pi. veloyage's changes enable the driver to read the distances up to 250 cm, which is still not the full range of the sensor.
 
 This fork simply renames the driver to `adafruit_vl53l4cx` to match the sensor name.
 
